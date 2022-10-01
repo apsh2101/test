@@ -1,29 +1,22 @@
-# This is a basic workflow to help you get started with Actions
+name: E2E Test
 
-name: CI
+on: [push, pull_request]
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  robot_test:
+  e2e-test:
     runs-on: ubuntu-latest
-    name: Run Robot Framework Tests
     steps:
-      - name: Checkout
+      - name: Checkout source code
         uses: actions/checkout@v2
       - name: Robot Framework
         uses: joonvena/robotframework-docker-action@v1.0
         with:
-          browser: 'firefox'
           robot_threads: 2
+          robot_tests_dir: test/postnord
+          robot_reports_dir: reports
+      - name: Upload product test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-report
+          path: reports
