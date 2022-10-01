@@ -8,12 +8,22 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-      - name: Robot Framework
+      - name: Robot Framework chrome
         uses: joonvena/robotframework-docker-action@v1.0
         with:
           robot_threads: 2
           robot_tests_dir: test/postnord
           robot_reports_dir: reports
+          browser: 'chrome'
+          
+      - name: Robot Framework firefox
+        uses: joonvena/robotframework-docker-action@v1.0
+        with:
+          robot_threads: 2
+          robot_tests_dir: test/postnord
+          robot_reports_dir: reports
+          browser: 'firefox'
+          
       - name: Upload product test results
         if: always()
         uses: actions/upload-artifact@v3
